@@ -1,0 +1,4 @@
+from data_cleaner_app.material_reference import load_material_dict_from_database
+
+
+MATERIAL_DICT = load_material_dict_from_database()
