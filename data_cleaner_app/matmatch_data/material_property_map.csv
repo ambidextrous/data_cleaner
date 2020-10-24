@@ -1,0 +1,7 @@
+internal_property_name,internal_property_unit
+linearCoefficientOfThermalExpansion,1/K
+thermalConductivity,W/(m·K)
+fractureToughness,MPa·√m
+density,g/cm³
+specificVolumetricSusceptibility,[-]
+meltingPoint,°C
