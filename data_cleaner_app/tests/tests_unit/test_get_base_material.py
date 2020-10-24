@@ -1,6 +1,8 @@
 from pytest import raises
 
-from data_cleaner_app.normalizers.base_material_normalizer import get_base_material_from_name
+from data_cleaner_app.normalizers.base_material_normalizer import (
+    get_base_material_from_name,
+)
 
 
 def test_extract_base_material_from_name_easy_case():

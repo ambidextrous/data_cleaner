@@ -1,4 +1,6 @@
-from data_cleaner_app.normalizers.expansion_normalizer import get_coefficient_of_expansion
+from data_cleaner_app.normalizers.expansion_normalizer import (
+    get_coefficient_of_expansion,
+)
 
 
 def test_extract_linear_coefficient_of_expansion_with_kelvin():
