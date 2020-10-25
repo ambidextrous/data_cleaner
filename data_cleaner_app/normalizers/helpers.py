@@ -1,5 +1,8 @@
-from typing import Optional, Tuple, List
+from typing import Optional, Tuple, List, Any
 import re, string
+import numpy as np
+
+from data_cleaner_app.data_classes import NumericMaterial
 
 
 TEMPERATURE_CONVERSION = {"c": lambda x: x, "f": lambda x: (x - 32) * 5 / 9}
@@ -90,7 +93,6 @@ def get_string_prior_to_substrings(s: str, substrings: List[str]) -> str:
             raise ValueError(
                 f"Unable to split string {s} on substring {substring} (substrings={substrings})"
             )
-    print(f"return_string={return_string}")
     return return_string
 
 
@@ -100,3 +102,33 @@ def get_string_without_substrings(s: str, substrings: List[str]) -> str:
         if char not in substrings:
             return_string += char
     return return_string
+
+
+def converts_to_float(anything: Any) -> bool:
+    try:
+        float(anything)
+        return True
+    except ValueError:
+        return False
+
+
+def check_common_cases(s: str) -> Tuple[bool, Any]:
+    # If zero value given, assume units correct and return
+    if s == "0":
+        return True, "0"
+
+    # If no value provided, return empty string
+    if not s:
+        return True, ""
+
+    # If single number given, assume units correct and return
+    if converts_to_float(s):
+        mat = NumericMaterial(
+            single_value=float(s),
+            value_range=tuple(),
+            temperature=None,
+            conversion=lambda x: x,
+        )
+        return True, mat.format()
+
+    return False, None

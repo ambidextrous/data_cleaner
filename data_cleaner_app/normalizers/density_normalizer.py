@@ -6,6 +6,7 @@ from data_cleaner_app.normalizers.helpers import (
     get_temperature,
     get_value_range,
     get_initial_numeric_value,
+    check_common_cases,
 )
 from data_cleaner_app.data_classes import NumericMaterial
 
@@ -22,13 +23,10 @@ DENSITY_CONVERSION = {
 
 
 def get_density(density: str) -> str:
-    # If zero value given, assume units correct and return
-    if density == "0":
-        return "0"
 
-    # If no density value provided, return empty string
-    if not density:
-        return ""
+    is_common_case, common_case_result = check_common_cases(density)
+    if is_common_case:
+        return common_case_result
 
     material = NumericMaterial(
         single_value=get_initial_numeric_value(density),

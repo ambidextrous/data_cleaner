@@ -7,6 +7,7 @@ from data_cleaner_app.normalizers.helpers import (
     get_value_range,
     get_initial_numeric_value,
     get_string_prior_to_substrings,
+    check_common_cases,
 )
 from data_cleaner_app.data_classes import NumericMaterial
 
@@ -14,11 +15,11 @@ TOUGHNESS_CONVERSION = {"mpam": lambda x: x}
 
 
 def get_fracture_toughness(toughness: str) -> str:
-    # If zero value given, assume units correct and return
-    if toughness == "0":
-        return "0"
 
-    # If no toughness value provided, return empty string
+    is_common_case, common_case_result = check_common_cases(toughness)
+    if is_common_case:
+        return common_case_result
+
     potential_numeric_section = get_string_prior_to_substrings(toughness, ["@", "for"])
 
     material = NumericMaterial(
