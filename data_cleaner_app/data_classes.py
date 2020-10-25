@@ -24,6 +24,15 @@ class NumericMaterial:
         if (self.single_value is None) and (not self.value_range):
             raise ValueError("Unable to parse value data from numeric material")
         elif self.value_range:
-            return f"{np.format_float_positional(self.conversion(self.value_range[0]))},{np.format_float_positional(self.conversion(self.value_range[1]))}{temp_representation}"
+            bottom = str(
+                np.format_float_positional(self.conversion(self.value_range[0]))
+            )
+            if bottom.endswith("."):
+                bottom = bottom[:-1]
+            top = str(np.format_float_positional(self.conversion(self.value_range[1])))
+            if top.endswith("."):
+                top = top[:-1]
+            return f"{bottom},{top}{temp_representation}"
         else:
-            return f"{np.format_float_positional(self.conversion(self.single_value))}{temp_representation}"
+            val = np.format_float_positional(self.conversion(self.single_value))
+            return f"{val}{temp_representation}"

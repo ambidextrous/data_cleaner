@@ -2,14 +2,19 @@ import re
 import string
 from typing import Callable
 
-from data_cleaner_app.normalizers.helpers import get_temperature, get_value_range, get_initial_numeric_value
+from data_cleaner_app.normalizers.helpers import (
+    get_temperature,
+    get_value_range,
+    get_initial_numeric_value,
+    get_string_prior_to_substrings,
+)
 from data_cleaner_app.data_classes import NumericMaterial
 
 EXPANSION_CONVERSION = {
-    "µmm": lambda x: x/1000000,
-    "10-6": lambda x: x/1000000,
-    "10-6°c": lambda x: x/1000000,
-    "10-6°c": lambda x: x/1000000,
+    "µmm": lambda x: x / 1_000_000,
+    "10-6": lambda x: x / 1_000_000,
+    "10-6°c": lambda x: x / 1_000_000,
+    "10-6°c": lambda x: x / 1_000_000,
 }
 
 
@@ -22,24 +27,30 @@ def get_coefficient_of_expansion(expansion: str) -> str:
     if not expansion:
         return ""
 
-    # Attempt to split numerical value section from beginning of string, if 
-    # divided by "µ" or "x" symbols. E.g. "7.00 µm/m-°C" or "10x10 -6 / ° C for 20C" 
-    potential_numeric_section = expansion.lower().split("x")[0].split("µ")[0]
+    # Attempt to split numerical value section from beginning of string, if
+    # divided by "µ" or "x" symbols. E.g. "7.00 µm/m-°C" or "10x10 -6 / ° C for 20C"
+    potential_numeric_section = get_string_prior_to_substrings(
+        expansion, ["x", "µ", "for", "@"]
+    )
 
     material = NumericMaterial(
         single_value=get_initial_numeric_value(potential_numeric_section),
         value_range=get_value_range(potential_numeric_section),
         temperature=get_temperature(expansion),
-        conversion=get_thermal_expansion_unit_convertion_function(expansion)
+        conversion=get_thermal_expansion_unit_convertion_function(expansion),
     )
 
-    return material.format() 
+    return material.format()
 
 
-def get_thermal_expansion_unit_convertion_function(expansion: str) -> Callable[[float],float]:
+def get_thermal_expansion_unit_convertion_function(
+    expansion: str
+) -> Callable[[float], float]:
 
     # Strip puncation and whitespace characters (excluding "-") from expansion
-    characters_to_remove = set(string.punctuation).difference({'-'}).union(string.whitespace)
+    characters_to_remove = (
+        set(string.punctuation).difference({"-"}).union(string.whitespace)
+    )
 
     stripped_expansion = ""
     for char in expansion:
@@ -60,4 +71,3 @@ def get_thermal_expansion_unit_convertion_function(expansion: str) -> Callable[[
 
     # If density units unidentifiable, raise ValueError
     raise ValueError(f"Unable to convert to units provided for expansion: {expansion}")
-

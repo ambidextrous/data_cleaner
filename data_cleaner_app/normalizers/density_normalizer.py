@@ -2,7 +2,11 @@ import re
 import string
 from typing import Callable
 
-from data_cleaner_app.normalizers.helpers import get_temperature, get_value_range, get_initial_numeric_value
+from data_cleaner_app.normalizers.helpers import (
+    get_temperature,
+    get_value_range,
+    get_initial_numeric_value,
+)
 from data_cleaner_app.data_classes import NumericMaterial
 
 DENSITY_CONVERSION = {
@@ -30,13 +34,15 @@ def get_density(density: str) -> str:
         single_value=get_initial_numeric_value(density),
         value_range=get_value_range(density),
         temperature=get_temperature(density),
-        conversion=get_density_unit_convertion_function(density)
+        conversion=get_density_unit_convertion_function(density),
     )
 
-    return material.format() 
+    return material.format()
 
 
-def get_density_unit_convertion_function(given_density: str) -> Callable[[float],float]:
+def get_density_unit_convertion_function(
+    given_density: str
+) -> Callable[[float], float]:
 
     # Strip non unit characters from density
     characters_to_remove = set(string.digits).union(set(string.punctuation))
@@ -59,5 +65,6 @@ def get_density_unit_convertion_function(given_density: str) -> Callable[[float]
                 return DENSITY_CONVERSION[unit]
 
     # If density units unidentifiable, raise ValueError
-    raise ValueError(f"Unable to convert to units provided for density: {given_density}")
-
+    raise ValueError(
+        f"Unable to convert to units provided for density: {given_density}"
+    )
