@@ -30,7 +30,7 @@ def test_extract_linear_coefficient_of_expansion_with_µm():
 def test_extract_linear_coefficient_of_expansion_with_range():
     # Arrange
     thermal_expansion = "7.9 - 11 x10 -6 / ° C"
-    expected_coefficient = "0.000007,0.000011"
+    expected_coefficient = "0.0000079,0.000011"
 
     # Act
     coefficient = get_coefficient_of_expansion(thermal_expansion)
@@ -42,7 +42,7 @@ def test_extract_linear_coefficient_of_expansion_with_range():
 def test_extract_linear_coefficient_of_expansion_for_given_temperature():
     # Arrange
     thermal_expansion = "10x10 -6 / ° C for 20C"
-    expected_coefficient = "0.00001"
+    expected_coefficient = "0.00001;20"
 
     # Act
     coefficient = get_coefficient_of_expansion(thermal_expansion)

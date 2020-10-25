@@ -22,7 +22,7 @@ def get_temperature(s: str) -> Optional[float]:
             alpha_numeric_only_value = re.sub(
                 r"[\W_]+", "", potential_temp_value[-1:][0].lower()
             )
-            if "c" in alpha_numeric_only_value:
+            if "c" in alpha_numeric_only_value or "k" in alpha_numeric_only_value:
                 try:
                     return float(alpha_numeric_only_value.replace("c", "")) * sign_factor
                 except Exception:

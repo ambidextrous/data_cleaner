@@ -19,7 +19,7 @@ DENSITY_CONVERSION = {
 
 def get_density(density: str) -> str:
     # If zero value given, assume units correct and return
-    if density == 0:
+    if density == "0":
         return "0"
 
     # If no density value provided, return empty string
@@ -59,6 +59,5 @@ def get_density_unit_convertion_function(given_density: str) -> Callable[[float]
                 return DENSITY_CONVERSION[unit]
 
     # If density units unidentifiable, raise ValueError
-    print(f"cleaned_density={cleaned_density}")
     raise ValueError(f"Unable to convert to units provided for density: {given_density}")
 
