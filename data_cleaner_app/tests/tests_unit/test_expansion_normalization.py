@@ -1,4 +1,4 @@
-from data_cleaner_app.normalizers.expansion_normalizer import (
+from data_cleaner_app.normalization.expansion_normalization import (
     get_coefficient_of_expansion,
 )
 
@@ -9,7 +9,7 @@ def test_extract_linear_coefficient_of_expansion_with_kelvin():
     expected_coefficient = "0.000011"
 
     # Act
-    coefficient = get_coefficient_of_expansion(thermal_expansion)
+    coefficient = get_coefficient_of_expansion(thermal_expansion, [])
 
     # Assert
     assert coefficient == expected_coefficient
@@ -21,7 +21,7 @@ def test_extract_linear_coefficient_of_expansion_with_µm():
     expected_coefficient = "0.000007"
 
     # Act
-    coefficient = get_coefficient_of_expansion(thermal_expansion)
+    coefficient = get_coefficient_of_expansion(thermal_expansion, [])
 
     # Assert
     assert coefficient == expected_coefficient
@@ -33,7 +33,7 @@ def test_extract_linear_coefficient_of_expansion_with_range():
     expected_coefficient = "0.0000079,0.000011"
 
     # Act
-    coefficient = get_coefficient_of_expansion(thermal_expansion)
+    coefficient = get_coefficient_of_expansion(thermal_expansion, [])
 
     # Assert
     assert coefficient == expected_coefficient
@@ -45,7 +45,7 @@ def test_extract_linear_coefficient_of_expansion_for_given_temperature():
     expected_coefficient = "0.00001;20"
 
     # Act
-    coefficient = get_coefficient_of_expansion(thermal_expansion)
+    coefficient = get_coefficient_of_expansion(thermal_expansion, [])
 
     # Assert
     assert coefficient == expected_coefficient
@@ -57,7 +57,7 @@ def test_extract_linear_coefficient_of_expansion_with_decimal_base_value():
     expected_coefficient = "0.0000105"
 
     # Act
-    coefficient = get_coefficient_of_expansion(thermal_expansion)
+    coefficient = get_coefficient_of_expansion(thermal_expansion, [])
 
     # Assert
     assert coefficient == expected_coefficient

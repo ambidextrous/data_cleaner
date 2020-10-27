@@ -51,25 +51,22 @@ def get_temperature(s: str) -> Optional[float]:
     return None
 
 
-def get_value_range(s: str) -> Tuple[float, float]:
+def get_value_range(s: str, warnings) -> Tuple[float, float]:
     range_dividers = ["-", "to"]
     lowercase_s = s.lower()
     for divider in range_dividers:
         divided_by_range_list = lowercase_s.split(divider)
         if len(divided_by_range_list) > 1:
             try:
-                bottom = float(divided_by_range_list[0].strip())
-                top = float(divided_by_range_list[1].split()[0].strip())
-                return (bottom, top)
+                bottom = convert_string_to_float(
+                    s=divided_by_range_list[0].strip(), warnings=warnings
+                )
+                top = convert_string_to_float(
+                    s=divided_by_range_list[1].split()[0].strip(), warnings=warnings
+                )
+                return bottom, top
             except (ValueError, IndexError):
-                try:
-                    bottom = float(divided_by_range_list[0].strip().replace(",", "."))
-                    top = float(
-                        divided_by_range_list[1].split()[0].strip().replace(",", ".")
-                    )
-                    return (bottom, top)
-                except (ValueError, IndexError):
-                    pass
+                pass
     return tuple()
 
 
@@ -82,9 +79,7 @@ def get_initial_numeric_value(
     print(f"split_string={split_string}")
     if split_string:
         try:
-            return convert_string_to_float(
-                input=split_string[0].strip(), warnings=warnings
-            )
+            return convert_string_to_float(s=split_string[0].strip(), warnings=warnings)
         except ValueError:
             pass
     return None
@@ -103,18 +98,10 @@ def get_string_prior_to_substrings(s: str, substrings: List[str]) -> str:
 
 
 def get_string_post_substrings(s: str, substrings: List[str]) -> str:
-    print(f"s={s}")
     return_string = s
     for substring in substrings:
         if substring in s:
-            print(f"substring={substring}")
-            try:
-                return_string = return_string.split(substring)[-1]
-                print(f"return_string={return_string}")
-            except IndexError:
-                raise ValueError(
-                    f"Unable to split string {s} on substring {substring} (substrings={substrings})"
-                )
+            return_string = return_string.split(substring)[-1]
     if return_string == s:
         return ""
     else:
@@ -175,7 +162,9 @@ def get_unit_convertion_function(
         if char not in characters_to_remove:
             stripped_string += char
 
-    cleaned_string = stripped_string.lower()
+    cleaned_string = stripped_string.lower().strip()
+
+    print(f"cleaned_string={cleaned_string}")
 
     # If no units given or "safe value", assume units correct
     if not cleaned_string or cleaned_string in safe_values:
@@ -193,21 +182,19 @@ def get_unit_convertion_function(
     )
 
 
-def convert_string_to_float(
-    input: str, warnings: List[Dict[str, str]]
-) -> Optional[float]:
+def convert_string_to_float(s: str, warnings: List[Dict[str, str]]) -> Optional[float]:
     # Attempt to convert to float
     try:
-        value = float(input.strip())
+        value = float(s.strip())
         return value
     except ValueError:
         # Attempt to convert to float using "," decimal marker (and log warning)
         try:
-            value = float(input.strip().replace(",", ""))
-            message = f"Converted given value {input} to float value {value} using ',' thousands marker"
+            value = float(s.strip().replace(",", ""))
+            message = f"Converted given value {s} to float value {value} using ',' thousands marker"
             warnings.append({"float_conversion_warning": message})
             # TODO: Add warning logging
             return value
         except ValueError:
             pass
-    raise ValueError(f"Unable to convert input {input} to float.")
+    raise ValueError(f"Unable to convert input {s} to float.")

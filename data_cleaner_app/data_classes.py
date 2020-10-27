@@ -38,6 +38,7 @@ class NumericMaterial:
         return stringified_float
 
     def format(self):
+        print(f"format:{self}")
         if self.temperature is not None:
             temp_representation = (
                 f";{self._format_float(self.temperature_conversion(self.temperature))}"

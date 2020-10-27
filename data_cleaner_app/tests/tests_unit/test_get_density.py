@@ -21,7 +21,7 @@ def test_normalize_density_with_incorrect_units():
 
     # Act & Assert
     with raises(ValueError):
-        get_density(given_density,[])
+        get_density(given_density, [])
 
 
 def test_normalize_density_with_alternate_units():
