@@ -1,8 +1,8 @@
 import re
 import string
-from typing import Callable
+from typing import Callable, List, Dict
 
-from data_cleaner_app.normalizers.helpers import (
+from data_cleaner_app.normalization.common import (
     get_temperature,
     get_value_range,
     get_initial_numeric_value,
@@ -10,13 +10,15 @@ from data_cleaner_app.normalizers.helpers import (
     get_string_post_substrings,
     converts_to_float,
     clean_raw_string,
+    get_unit_convertion_function,
+    TEMPERATURE_CONVERSION,
 )
 from data_cleaner_app.data_classes import NumericMaterial
 
 CONDUCTIVITY_CONVERSION = {"wmk": lambda x: x}
 
 
-def get_thermal_conductivity(raw_conductivity: str) -> str:
+def get_thermal_conductivity(raw_conductivity: str, warnings: List[Dict[str,str]]) -> str:
 
     is_common_case, conductivity = clean_raw_string(raw_conductivity)
     if is_common_case:
@@ -30,10 +32,11 @@ def get_thermal_conductivity(raw_conductivity: str) -> str:
     )
 
     material = NumericMaterial(
-        single_value=get_initial_numeric_value(potential_numeric_section),
-        value_range=get_value_range(potential_numeric_section),
-        temperature=get_temperature(potential_temperature_section),
-        conversion=get_conductivity_unit_convertion_function(potential_numeric_section),
+        single_value=get_initial_numeric_value(potential_numeric_section,warnings),
+        value_range=get_value_range(potential_numeric_section,warnings),
+        temperature=get_initial_numeric_value(s=potential_temperature_section,warnings=warnings),
+        temperature_conversion=get_unit_convertion_function(s=potential_temperature_section,characters_to_remove=set(string.digits).union(string.punctuation),conversion_dict=TEMPERATURE_CONVERSION,safe_values=[]),
+        value_conversion=get_unit_convertion_function(s=potential_numeric_section,characters_to_remove=set(string.punctuation).union(set(string.digits)).union(set(string.whitespace)),conversion_dict=CONDUCTIVITY_CONVERSION,safe_values=[])
     )
 
     return material.format()
