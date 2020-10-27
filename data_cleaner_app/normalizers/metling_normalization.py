@@ -14,7 +14,7 @@ from data_cleaner_app.normalizers.common import (
 from data_cleaner_app.data_classes import NumericMaterial
 
 
-def get_metling_point(raw_melting_point: str, warnings: List[Dict[str,str]]) -> str:
+def get_metling_point(raw_melting_point: str, warnings: List[Dict[str, str]]) -> str:
 
     is_common_case, melting_point = clean_raw_string(raw_melting_point)
     if is_common_case:

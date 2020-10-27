@@ -14,6 +14,7 @@ TEMPERATURE_CONVERSION = {
     "f": lambda x: (x - 32) * (5 / 9),
 }
 
+
 def get_temperature(s: str) -> Optional[float]:
     potential_temp_values = [s.split("@"), s.split("for")]
 
@@ -72,14 +73,18 @@ def get_value_range(s: str) -> Tuple[float, float]:
     return tuple()
 
 
-def get_initial_numeric_value(s: str, warnings: List[Dict[str, str]]) -> Optional[float]:
+def get_initial_numeric_value(
+    s: str, warnings: List[Dict[str, str]]
+) -> Optional[float]:
     pruned_s = get_string_without_characters(s, [">", "<", "°"])
     lowercase_s = pruned_s.lower()
     split_string = lowercase_s.split()
     print(f"split_string={split_string}")
     if split_string:
         try:
-            return convert_string_to_float(input=split_string[0].strip(), warnings=warnings)
+            return convert_string_to_float(
+                input=split_string[0].strip(), warnings=warnings
+            )
         except ValueError:
             pass
     return None
@@ -98,15 +103,22 @@ def get_string_prior_to_substrings(s: str, substrings: List[str]) -> str:
 
 
 def get_string_post_substrings(s: str, substrings: List[str]) -> str:
-    return_string = s.lower()
+    print(f"s={s}")
+    return_string = s
     for substring in substrings:
-        try:
-            return_string = return_string.split(substring)[-1]
-        except IndexError:
-            raise ValueError(
-                f"Unable to split string {s} on substring {substring} (substrings={substrings})"
-            )
-    return return_string
+        if substring in s:
+            print(f"substring={substring}")
+            try:
+                return_string = return_string.split(substring)[-1]
+                print(f"return_string={return_string}")
+            except IndexError:
+                raise ValueError(
+                    f"Unable to split string {s} on substring {substring} (substrings={substrings})"
+                )
+    if return_string == s:
+        return ""
+    else:
+        return return_string
 
 
 def get_string_without_characters(s: str, characters: Iterable[str]) -> str:
@@ -181,7 +193,9 @@ def get_unit_convertion_function(
     )
 
 
-def convert_string_to_float(input: str, warnings: List[Dict[str, str]]) -> Optional[float]:
+def convert_string_to_float(
+    input: str, warnings: List[Dict[str, str]]
+) -> Optional[float]:
     # Attempt to convert to float
     try:
         value = float(input.strip())

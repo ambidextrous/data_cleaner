@@ -8,7 +8,7 @@ class TestTemperature:
         expected_melting_point = "2681,2847"
 
         # Act
-        returned_melting_point = get_metling_point(string_with_melting_point,[])
+        returned_melting_point = get_metling_point(string_with_melting_point, [])
 
         # Assert
         assert returned_melting_point == expected_melting_point
@@ -19,7 +19,7 @@ class TestTemperature:
         expected_melting_point = "2715"
 
         # Act
-        returned_melting_point = get_metling_point(string_with_melting_point,[])
+        returned_melting_point = get_metling_point(string_with_melting_point, [])
 
         # Assert
         assert returned_melting_point == expected_melting_point

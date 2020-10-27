@@ -40,7 +40,7 @@ class NumericMaterial:
     def format(self):
         if self.temperature is not None:
             temp_representation = (
-                f";{self._format_float(self.temperature_conversion(self.temp))}"
+                f";{self._format_float(self.temperature_conversion(self.temperature))}"
             )
         else:
             temp_representation = ""

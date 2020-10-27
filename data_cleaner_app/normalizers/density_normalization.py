@@ -1,12 +1,17 @@
 import re
 import string
-from typing import Callable
+from typing import Callable, List
 
-from data_cleaner_app.normalizers.helpers import (
+from data_cleaner_app.normalizers.common import (
     get_temperature,
     get_value_range,
     get_initial_numeric_value,
     clean_raw_string,
+    get_unit_convertion_function,
+    get_string_prior_to_substrings,
+    get_string_post_substrings,
+    get_string_without_characters,
+    TEMPERATURE_CONVERSION,
 )
 from data_cleaner_app.data_classes import NumericMaterial
 
@@ -22,47 +27,40 @@ DENSITY_CONVERSION = {
 }
 
 
-def get_density(raw_density: str) -> str:
+def get_density(raw_density: str, warnings: List) -> str:
 
     is_common_case, density = clean_raw_string(raw_density)
     if is_common_case:
         return density
 
-    material = NumericMaterial(
-        single_value=get_initial_numeric_value(density),
-        value_range=get_value_range(density),
-        temperature=get_temperature(density),
-        conversion=get_density_unit_convertion_function(density),
+    temperature_substring = get_string_post_substrings(
+        s=density, substrings=["@", "for"]
     )
+    print(f"temperature_substring={temperature_substring}")
+    value_substring = get_string_prior_to_substrings(s=density, substrings=["@", "for"])
+
+    material = NumericMaterial(
+        single_value=get_initial_numeric_value(s=value_substring, warnings=warnings),
+        value_range=get_value_range(value_substring),
+        value_conversion=get_unit_convertion_function(
+            s=density,
+            characters_to_remove=set(string.digits).union(string.punctuation),
+            conversion_dict=DENSITY_CONVERSION,
+            safe_values=[],
+        ),
+        temperature=get_initial_numeric_value(
+            s=get_string_without_characters(
+                s=temperature_substring, characters=["f", "°", "c", "k"]
+            ),
+            warnings=warnings,
+        ),
+        temperature_conversion=get_unit_convertion_function(
+            s=temperature_substring,
+            characters_to_remove=set(string.digits).union(string.punctuation),
+            conversion_dict=TEMPERATURE_CONVERSION,
+            safe_values=[],
+        ),
+    )
+    print(f"material={material}")
 
     return material.format()
-
-
-def get_density_unit_convertion_function(
-    given_density: str
-) -> Callable[[float], float]:
-
-    # Strip non unit characters from density
-    characters_to_remove = set(string.digits).union(set(string.punctuation))
-
-    stripped_density = ""
-    for char in given_density:
-        if char not in characters_to_remove:
-            stripped_density += char
-
-    cleaned_density = stripped_density.lower()
-
-    # If no density units given, assume units are correct
-    if not cleaned_density:
-        return lambda x: x
-
-    # If density units identifiable, return corresponding conversion function
-    else:
-        for unit in DENSITY_CONVERSION:
-            if unit in cleaned_density:
-                return DENSITY_CONVERSION[unit]
-
-    # If density units unidentifiable, raise ValueError
-    raise ValueError(
-        f"Unable to convert to units provided for density: {given_density}"
-    )
