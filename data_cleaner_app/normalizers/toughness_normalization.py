@@ -7,18 +7,18 @@ from data_cleaner_app.normalizers.helpers import (
     get_value_range,
     get_initial_numeric_value,
     get_string_prior_to_substrings,
-    check_common_cases,
+    clean_raw_string,
 )
 from data_cleaner_app.data_classes import NumericMaterial
 
 TOUGHNESS_CONVERSION = {"mpam": lambda x: x}
 
 
-def get_fracture_toughness(toughness: str) -> str:
+def get_fracture_toughness(raw_toughness: str) -> str:
 
-    is_common_case, common_case_result = check_common_cases(toughness)
+    is_common_case, toughness = clean_raw_string(toughness)
     if is_common_case:
-        return common_case_result
+        return toughness
 
     potential_numeric_section = get_string_prior_to_substrings(toughness, ["@", "for"])
 
@@ -58,6 +58,5 @@ def get_toughness_unit_convertion_function(toughness: str) -> Callable[[float], 
             if unit in cleaned_toughness:
                 return TOUGHNESS_CONVERSION[unit]
 
-    print(f"cleaned_toughness={cleaned_toughness}")
     # If toughness units unidentifiable, raise ValueError
     raise ValueError(f"Unable to convert to units provided for toughness: {toughness}")

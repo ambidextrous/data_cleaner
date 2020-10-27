@@ -14,25 +14,42 @@ class NumericMaterial:
     single_value: float
     value_range: tuple
     temperature: float
-    conversion: callable
+    temperature_conversion: callable
+    value_conversion: callable
+
+    def _format_float(self, number: float) -> str:
+        """
+        Formats float to string representation
+
+        float(0.000001) -> '1e-06'
+
+        _format_float(0.000001) -> '0.000001'
+
+        Removes final decimal marker from non-decimal numbers
+
+        np.format_float_positional(8) -> '8.'
+
+        _format_float(8) -> '8'
+
+        """
+        stringified_float = str(np.format_float_positional(number))
+        if stringified_float.endswith("."):
+            return stringified_float[:-1]
+        return stringified_float
 
     def format(self):
         if self.temperature is not None:
-            temp_representation = f";{round(self.temperature) if str(self.temperature).endswith('.0') else np.format_float_positional(self.temperature)}"
+            temp_representation = (
+                f";{self._format_float(self.temperature_conversion(self.temp))}"
+            )
         else:
             temp_representation = ""
         if (self.single_value is None) and (not self.value_range):
             raise ValueError("Unable to parse value data from numeric material")
         elif self.value_range:
-            bottom = str(
-                np.format_float_positional(self.conversion(self.value_range[0]))
-            )
-            if bottom.endswith("."):
-                bottom = bottom[:-1]
-            top = str(np.format_float_positional(self.conversion(self.value_range[1])))
-            if top.endswith("."):
-                top = top[:-1]
+            bottom = self._format_float(self.value_conversion(self.value_range[0]))
+            top = self._format_float(self.value_conversion(self.value_range[1]))
             return f"{bottom},{top}{temp_representation}"
         else:
-            val = np.format_float_positional(self.conversion(self.single_value))
+            val = self._format_float(self.value_conversion(self.single_value))
             return f"{val}{temp_representation}"

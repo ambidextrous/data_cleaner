@@ -8,18 +8,18 @@ from data_cleaner_app.normalizers.helpers import (
     get_initial_numeric_value,
     get_string_prior_to_substrings,
     converts_to_float,
-    check_common_cases,
+    clean_raw_string,
 )
 from data_cleaner_app.data_classes import NumericMaterial
 
 MAGNETIC_CONVERSION = {}
 
 
-def get_magnetic_susceptibility(magnetic: str) -> str:
+def get_magnetic_susceptibility(raw_magnetic: str) -> str:
 
-    is_common_case, common_case_result = check_common_cases(magnetic)
+    is_common_case, magnetic = clean_raw_string(raw_magnetic)
     if is_common_case:
-        return common_case_result
+        return magnetic
 
     potential_numeric_section = get_string_prior_to_substrings(magnetic, ["@", "for"])
 

@@ -7,7 +7,7 @@ from data_cleaner_app.normalizers.helpers import (
     get_value_range,
     get_initial_numeric_value,
     get_string_prior_to_substrings,
-    check_common_cases,
+    clean_raw_string,
 )
 from data_cleaner_app.data_classes import NumericMaterial
 
@@ -19,11 +19,11 @@ EXPANSION_CONVERSION = {
 }
 
 
-def get_coefficient_of_expansion(expansion: str) -> str:
+def get_coefficient_of_expansion(raw_expansion: str) -> str:
 
-    is_common_case, common_case_result = check_common_cases(expansion)
+    is_common_case, expansion = clean_raw_string(raw_expansion)
     if is_common_case:
-        return common_case_result
+        return expansion
 
     # Attempt to split numerical value section from beginning of string, if
     # divided by "µ" or "x" symbols. E.g. "7.00 µm/m-°C" or "10x10 -6 / ° C for 20C"
