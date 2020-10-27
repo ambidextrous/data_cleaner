@@ -37,13 +37,18 @@ def get_coefficient_of_expansion(
     value_substring = get_string_prior_to_substrings(expansion, ["x", "µ", "for", "@"])
     temperature_substring = get_string_post_substrings(expansion, ["for", "@"])
     print(f"temperature_substring={temperature_substring}")
-    unit_substring = get_string_prior_to_substrings(s=expansion,substrings=["for","@"])
+    unit_substring = get_string_prior_to_substrings(
+        s=expansion, substrings=["for", "@"]
+    )
 
     material = NumericMaterial(
         single_value=get_initial_numeric_value(s=value_substring, warnings=warnings),
         value_range=get_value_range(s=value_substring, warnings=warnings),
         temperature=get_initial_numeric_value(
-            s=get_string_without_characters(s=temperature_substring,characters=["f", "°", "c", "k"]), warnings=warnings
+            s=get_string_without_characters(
+                s=temperature_substring, characters=["f", "°", "c", "k"]
+            ),
+            warnings=warnings,
         ),
         temperature_conversion=get_unit_convertion_function(
             s=temperature_substring,

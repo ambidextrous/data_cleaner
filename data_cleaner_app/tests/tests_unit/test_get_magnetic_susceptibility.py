@@ -1,4 +1,4 @@
-from data_cleaner_app.normalizers.magenetic_susceptibility_normalizer import (
+from data_cleaner_app.normalization.magenetic_normalization import (
     get_magnetic_susceptibility,
 )
 

@@ -142,7 +142,8 @@ def clean_raw_string(raw_input: str) -> Tuple[bool, str]:
             single_value=float(s),
             value_range=tuple(),
             temperature=None,
-            conversion=lambda x: x,
+            temperature_conversion=lambda x: x,
+            value_conversion=lambda x: x,
         )
         return True, mat.format()
 
