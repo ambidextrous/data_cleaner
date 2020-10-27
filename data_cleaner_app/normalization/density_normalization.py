@@ -36,7 +36,6 @@ def get_density(raw_density: str, warnings: List) -> str:
     temperature_substring = get_string_post_substrings(
         s=density, substrings=["@", "for"]
     )
-    print(f"temperature_substring={temperature_substring}")
     value_substring = get_string_prior_to_substrings(s=density, substrings=["@", "for"])
 
     material = NumericMaterial(

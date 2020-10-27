@@ -1,11 +1,11 @@
 import string
 import re
-from typing import List, Set
+from typing import List, Set, Dict
 
 from data_cleaner_app.material_reference import TestMaterialRetriever, Material
 
 
-def get_base_material_from_name(given_name: str) -> str:
+def get_base_material_from_name(given_name: str, warnings: List[Dict[str, str]]) -> str:
     """
     get_base_material_from_name('Zirconia, (ZrO2)')
     ->
@@ -17,33 +17,25 @@ def get_base_material_from_name(given_name: str) -> str:
         raise ValueError(f"Expected required name value, got {given_name}")
 
     material_retriever = TestMaterialRetriever()
-
     name_tokens = _tokenize_name(given_name)
-
     matching_materials = set()
 
     for token in name_tokens:
-
         if material_retriever.contains_synonym(token):
-
             matching_materials.add(material_retriever.get_by_synonym(token))
 
     if not matching_materials:
-
         raise ValueError(f"Failed to identify material matching name `{given_name}`")
 
     elif len(matching_materials) == 1:
-
         single_material = matching_materials.pop()
         return single_material.name
-
     else:
-
         meta_materials = _get_meta_materials(matching_materials)
-
         if len(meta_materials) == 1:
+            message = f"Automatically selected one material as match {meta_materials[0]} from multiple matching materials {matching_materials}"
+            warnings.append({"material_identification_warning": message})
             return meta_materials[0].name
-
         else:
             raise ValueError(
                 f"Identified multiple materials matching name `{given_name}`: {matching_materials}"

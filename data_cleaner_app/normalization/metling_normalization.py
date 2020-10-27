@@ -22,7 +22,7 @@ def get_metling_point(raw_melting_point: str, warnings: List[Dict[str, str]]) ->
 
     material = NumericMaterial(
         single_value=get_initial_numeric_value(s=melting_point, warnings=warnings),
-        value_range=get_value_range(melting_point,[]),
+        value_range=get_value_range(melting_point, []),
         temperature=None,
         value_conversion=get_unit_convertion_function(
             s=melting_point,

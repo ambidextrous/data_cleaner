@@ -9,7 +9,9 @@ def test_extract_thermal_conductivity_with_negative_kelvin():
     expected_thermal_conductity = "1.675"
 
     # Act
-    returned_thermal_conductivity = get_thermal_conductivity(given_thermal_conductivity,[])
+    returned_thermal_conductivity = get_thermal_conductivity(
+        given_thermal_conductivity, []
+    )
 
     # Assert
     assert returned_thermal_conductivity == expected_thermal_conductity
@@ -21,7 +23,9 @@ def test_extract_thermal_conductivity_with_to_range():
     expected_thermal_conductity = "2.5,3"
 
     # Act
-    returned_thermal_conductivity = get_thermal_conductivity(given_thermal_conductivity,[])
+    returned_thermal_conductivity = get_thermal_conductivity(
+        given_thermal_conductivity, []
+    )
 
     # Assert
     assert returned_thermal_conductivity == expected_thermal_conductity
@@ -33,7 +37,9 @@ def test_extract_thermal_conductivity_with_range_and_with_hyphenated_range_and_n
     expected_thermal_conductity = "2.7,3"
 
     # Act
-    returned_thermal_conductivity = get_thermal_conductivity(given_thermal_conductivity, [])
+    returned_thermal_conductivity = get_thermal_conductivity(
+        given_thermal_conductivity, []
+    )
 
     # Assert
     assert returned_thermal_conductivity == expected_thermal_conductity

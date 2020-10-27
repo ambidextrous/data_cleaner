@@ -1,4 +1,4 @@
-from data_cleaner_app.normalizers.fracture_toughness_normalizer import (
+from data_cleaner_app.normalization.toughness_normalization import (
     get_fracture_toughness,
 )
 
@@ -9,7 +9,7 @@ def test_extract_fracture_toughness_with_range_and_alternate_symbol():
     expected_fracture_toughness = "6.5,8"
 
     # Act
-    returned_fracture_toughness = get_fracture_toughness(given_fracture_toughness)
+    returned_fracture_toughness = get_fracture_toughness(given_fracture_toughness, [])
 
     # Assert
     assert returned_fracture_toughness == expected_fracture_toughness
@@ -21,7 +21,7 @@ def test_extract_fracture_toughness_with_temperature_association():
     expected_fracture_toughness = "6.04;23"
 
     # Act
-    returned_fracture_toughness = get_fracture_toughness(given_fracture_toughness)
+    returned_fracture_toughness = get_fracture_toughness(given_fracture_toughness, [])
 
     # Assert
     assert returned_fracture_toughness == expected_fracture_toughness

@@ -18,7 +18,9 @@ from data_cleaner_app.data_classes import NumericMaterial
 CONDUCTIVITY_CONVERSION = {"wmk": lambda x: x}
 
 
-def get_thermal_conductivity(raw_conductivity: str, warnings: List[Dict[str,str]]) -> str:
+def get_thermal_conductivity(
+    raw_conductivity: str, warnings: List[Dict[str, str]]
+) -> str:
 
     is_common_case, conductivity = clean_raw_string(raw_conductivity)
     if is_common_case:
@@ -32,11 +34,25 @@ def get_thermal_conductivity(raw_conductivity: str, warnings: List[Dict[str,str]
     )
 
     material = NumericMaterial(
-        single_value=get_initial_numeric_value(potential_numeric_section,warnings),
-        value_range=get_value_range(potential_numeric_section,warnings),
-        temperature=get_initial_numeric_value(s=potential_temperature_section,warnings=warnings),
-        temperature_conversion=get_unit_convertion_function(s=potential_temperature_section,characters_to_remove=set(string.digits).union(string.punctuation),conversion_dict=TEMPERATURE_CONVERSION,safe_values=[]),
-        value_conversion=get_unit_convertion_function(s=potential_numeric_section,characters_to_remove=set(string.punctuation).union(set(string.digits)).union(set(string.whitespace)),conversion_dict=CONDUCTIVITY_CONVERSION,safe_values=[])
+        single_value=get_initial_numeric_value(potential_numeric_section, warnings),
+        value_range=get_value_range(potential_numeric_section, warnings),
+        temperature=get_initial_numeric_value(
+            s=potential_temperature_section, warnings=warnings
+        ),
+        temperature_conversion=get_unit_convertion_function(
+            s=potential_temperature_section,
+            characters_to_remove=set(string.digits).union(string.punctuation),
+            conversion_dict=TEMPERATURE_CONVERSION,
+            safe_values=[],
+        ),
+        value_conversion=get_unit_convertion_function(
+            s=potential_numeric_section,
+            characters_to_remove=set(string.punctuation)
+            .union(set(string.digits))
+            .union(set(string.whitespace)),
+            conversion_dict=CONDUCTIVITY_CONVERSION,
+            safe_values=[],
+        ),
     )
 
     return material.format()
