@@ -1,4 +1,4 @@
-from data_cleaner_app.normalizers.metling_normalization import get_metling_point
+from data_cleaner_app.normalization.metling_normalization import get_metling_point
 
 
 class TestTemperature:
