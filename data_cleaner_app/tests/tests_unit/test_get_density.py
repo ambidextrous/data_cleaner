@@ -1,6 +1,6 @@
 from pytest import raises
 
-from data_cleaner_app.normalizers.density_normalization import get_density
+from data_cleaner_app.normalization.density_normalization import get_density
 
 
 def test_normalize_density_with_correct_units():

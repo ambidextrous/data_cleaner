@@ -2,8 +2,7 @@ import re
 import string
 from typing import Callable, List
 
-from data_cleaner_app.normalizers.common import (
-    get_temperature,
+from data_cleaner_app.normalization.common import (
     get_value_range,
     get_initial_numeric_value,
     clean_raw_string,
@@ -40,7 +39,7 @@ def get_density(raw_density: str, warnings: List) -> str:
 
     material = NumericMaterial(
         single_value=get_initial_numeric_value(s=value_substring, warnings=warnings),
-        value_range=get_value_range(value_substring),
+        value_range=get_value_range(value_substring, warnings),
         value_conversion=get_unit_convertion_function(
             s=density,
             characters_to_remove=set(string.digits).union(string.punctuation),

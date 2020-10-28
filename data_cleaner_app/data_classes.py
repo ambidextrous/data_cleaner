@@ -19,18 +19,17 @@ class NumericMaterial:
 
     def _format_float(self, number: float) -> str:
         """
-        Formats float to string representation
+        Formats float to specified string representation:
 
-        float(0.000001) -> '1e-06'
+        BAD: float(0.000001) -> '1e-06'
 
-        _format_float(0.000001) -> '0.000001'
+        GOOD: _format_float(0.000001) -> '0.000001'
 
         Removes final decimal marker from non-decimal numbers
 
-        np.format_float_positional(8) -> '8.'
+        BAD: np.format_float_positional(8) -> '8.'
 
-        _format_float(8) -> '8'
-
+        GOOD: _format_float(8) -> '8'
         """
         stringified_float = str(np.format_float_positional(number))
         if stringified_float.endswith("."):
@@ -38,7 +37,6 @@ class NumericMaterial:
         return stringified_float
 
     def format(self):
-        print(f"format:{self}")
         if self.temperature is not None:
             temp_representation = (
                 f";{self._format_float(self.temperature_conversion(self.temperature))}"

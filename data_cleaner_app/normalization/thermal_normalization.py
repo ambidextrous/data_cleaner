@@ -3,7 +3,6 @@ import string
 from typing import Callable, List, Dict
 
 from data_cleaner_app.normalization.common import (
-    get_temperature,
     get_value_range,
     get_initial_numeric_value,
     get_string_prior_to_substrings,

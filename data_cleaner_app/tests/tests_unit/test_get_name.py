@@ -1,4 +1,4 @@
-from data_cleaner_app.normalizers.name_normalizer import get_name
+from data_cleaner_app.normalization.name_normalization import get_name
 
 
 def test_normalize_correct_name():
@@ -7,7 +7,7 @@ def test_normalize_correct_name():
     expected_name = "Zirconium Oxide"
 
     # Act
-    returned_name = get_name(given_name)
+    returned_name = get_name(given_name, "Zirconium Oxide")
 
     # Assert
     assert returned_name == expected_name
@@ -19,7 +19,7 @@ def test_normalize_name_with_missformatted_formula():
     expected_name = "Zirconium Oxide"
 
     # Act
-    returned_name = get_name(given_name)
+    returned_name = get_name(given_name, "Zirconium Oxide")
 
     # Assert
     assert returned_name == expected_name
@@ -31,7 +31,7 @@ def test_normalize_name_with_multiple_names():
     expected_name = "Zirconium Oxide"
 
     # Act
-    returned_name = get_name(given_name)
+    returned_name = get_name(given_name, "Zirconium Oxide")
 
     # Assert
     assert returned_name == expected_name
@@ -43,7 +43,7 @@ def test_normalize_name_formula_and_no_known_name():
     expected_name = "ZrO2 Y-PSZ"
 
     # Act
-    returned_name = get_name(given_name)
+    returned_name = get_name(given_name, "Zirconium Oxide")
 
     # Assert
     assert returned_name == expected_name

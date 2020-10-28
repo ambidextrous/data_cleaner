@@ -1,6 +1,6 @@
 from pytest import raises
 
-from data_cleaner_app.normalizers.base_material_normalizer import (
+from data_cleaner_app.normalization.base_material_normalization import (
     get_base_material_from_name,
 )
 
@@ -11,7 +11,7 @@ def test_extract_base_material_from_name_easy_case():
     expected_base_material = "Zirconium Oxide"
 
     # Act
-    base_material = get_base_material_from_name(name)
+    base_material = get_base_material_from_name(name,[])
 
     # Assert
     assert base_material == expected_base_material
@@ -24,7 +24,7 @@ def test_extract_base_material_not_found():
 
     # Act & Assert
     with raises(ValueError):
-        get_base_material_from_name(name)
+        get_base_material_from_name(name,[])
 
 
 def test_extract_base_material_not_found():
@@ -34,7 +34,7 @@ def test_extract_base_material_not_found():
 
     # Act & Assert
     with raises(ValueError):
-        get_base_material_from_name(name)
+        get_base_material_from_name(name,[])
 
 
 def test_extract_base_material_from_name_null_cases():
@@ -43,7 +43,7 @@ def test_extract_base_material_from_name_null_cases():
 
     # Act & Assert
     with raises(ValueError):
-        get_base_material_from_name(name)
+        get_base_material_from_name(name,[])
 
 
 def test_extract_base_material_from_name_with_irregular_capitalization():
@@ -52,7 +52,7 @@ def test_extract_base_material_from_name_with_irregular_capitalization():
     expected_base_material = "Zirconium Oxide"
 
     # Act
-    base_material = get_base_material_from_name(name)
+    base_material = get_base_material_from_name(name, [])
 
     # Assert
     assert base_material == expected_base_material
@@ -64,7 +64,7 @@ def test_extract_base_material_from_name_with_irregular_formula_spacing():
     expected_base_material = "Zirconium Oxide"
 
     # Act
-    base_material = get_base_material_from_name(name)
+    base_material = get_base_material_from_name(name, [])
 
     # Assert
     assert base_material == expected_base_material
@@ -76,7 +76,7 @@ def test_extract_base_material_formula_with_non_standard_name():
     expected_base_material = "Zirconium Oxide"
 
     # Act
-    base_material = get_base_material_from_name(name)
+    base_material = get_base_material_from_name(name, [])
 
     # Assert
     assert base_material == expected_base_material
@@ -88,7 +88,7 @@ def test_extract_base_material_with_comma_separated_names():
     expected_base_material = "Zirconium Oxide"
 
     # Act
-    base_material = get_base_material_from_name(name)
+    base_material = get_base_material_from_name(name, [])
 
     # Assert
     assert base_material == expected_base_material

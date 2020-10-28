@@ -3,7 +3,6 @@ import string
 from typing import Callable, List, Dict
 
 from data_cleaner_app.normalization.common import (
-    get_temperature,
     get_value_range,
     get_initial_numeric_value,
     get_string_prior_to_substrings,
@@ -36,7 +35,6 @@ def get_coefficient_of_expansion(
     # divided by "µ" or "x" symbols. E.g. "7.00 µm/m-°C" or "10x10 -6 / ° C for 20C"
     value_substring = get_string_prior_to_substrings(expansion, ["x", "µ", "for", "@"])
     temperature_substring = get_string_post_substrings(expansion, ["for", "@"])
-    print(f"temperature_substring={temperature_substring}")
     unit_substring = get_string_prior_to_substrings(
         s=expansion, substrings=["for", "@"]
     )

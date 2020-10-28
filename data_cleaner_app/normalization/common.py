@@ -15,40 +15,40 @@ TEMPERATURE_CONVERSION = {
 }
 
 
-def get_temperature(s: str) -> Optional[float]:
-    potential_temp_values = [s.split("@"), s.split("for")]
-
-    for potential_temp_value in potential_temp_values:
-        sign_factor = 1
-        if potential_temp_value[-1:]:
-            if "-" in potential_temp_value[-1:][0]:
-                sign_factor = -1
-            try:
-                return float(potential_temp_value[-1:][0])
-            except Exception:
-                pass
-            alpha_numeric_only_value = re.sub(
-                r"[\W_]+", "", potential_temp_value[-1:][0].lower()
-            )
-            if "c" in alpha_numeric_only_value or "k" in alpha_numeric_only_value:
-                try:
-                    return (
-                        float(alpha_numeric_only_value.replace("c", "")) * sign_factor
-                    )
-                except Exception:
-                    pass
-            elif "f" in alpha_numeric_only_value:
-                try:
-                    return (
-                        (float(alpha_numeric_only_value.replace("f", "")) - 32)
-                        * 5
-                        / 9
-                        * sign_factor
-                    )
-                except Exception:
-                    pass
-
-    return None
+#def get_temperature(s: str) -> Optional[float]:
+#    potential_temp_values = [s.split("@"), s.split("for")]
+#
+#    for potential_temp_value in potential_temp_values:
+#        sign_factor = 1
+#        if potential_temp_value[-1:]:
+#            if "-" in potential_temp_value[-1:][0]:
+#                sign_factor = -1
+#            try:
+#                return float(potential_temp_value[-1:][0])
+#            except Exception:
+#                pass
+#            alpha_numeric_only_value = re.sub(
+#                r"[\W_]+", "", potential_temp_value[-1:][0].lower()
+#            )
+#            if "c" in alpha_numeric_only_value or "k" in alpha_numeric_only_value:
+#                try:
+#                    return (
+#                        float(alpha_numeric_only_value.replace("c", "")) * sign_factor
+#                    )
+#                except Exception:
+#                    pass
+#            elif "f" in alpha_numeric_only_value:
+#                try:
+#                    return (
+#                        (float(alpha_numeric_only_value.replace("f", "")) - 32)
+#                        * 5
+#                        / 9
+#                        * sign_factor
+#                    )
+#                except Exception:
+#                    pass
+#
+#    return None
 
 
 def get_value_range(s: str, warnings) -> Tuple[float, float]:
