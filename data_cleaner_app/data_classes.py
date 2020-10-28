@@ -3,13 +3,6 @@ import numpy as np
 
 
 @dataclass
-class MaterialAttribute:
-    name: str
-    value_range: tuple
-    temperature: int = None
-
-
-@dataclass
 class NumericMaterial:
     single_value: float
     value_range: tuple

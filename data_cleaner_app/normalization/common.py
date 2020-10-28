@@ -15,42 +15,6 @@ TEMPERATURE_CONVERSION = {
 }
 
 
-# def get_temperature(s: str) -> Optional[float]:
-#    potential_temp_values = [s.split("@"), s.split("for")]
-#
-#    for potential_temp_value in potential_temp_values:
-#        sign_factor = 1
-#        if potential_temp_value[-1:]:
-#            if "-" in potential_temp_value[-1:][0]:
-#                sign_factor = -1
-#            try:
-#                return float(potential_temp_value[-1:][0])
-#            except Exception:
-#                pass
-#            alpha_numeric_only_value = re.sub(
-#                r"[\W_]+", "", potential_temp_value[-1:][0].lower()
-#            )
-#            if "c" in alpha_numeric_only_value or "k" in alpha_numeric_only_value:
-#                try:
-#                    return (
-#                        float(alpha_numeric_only_value.replace("c", "")) * sign_factor
-#                    )
-#                except Exception:
-#                    pass
-#            elif "f" in alpha_numeric_only_value:
-#                try:
-#                    return (
-#                        (float(alpha_numeric_only_value.replace("f", "")) - 32)
-#                        * 5
-#                        / 9
-#                        * sign_factor
-#                    )
-#                except Exception:
-#                    pass
-#
-#    return None
-
-
 def get_value_range(s: str, warnings) -> Tuple[float, float]:
     range_dividers = ["-", "to"]
     lowercase_s = s.lower()
@@ -76,7 +40,6 @@ def get_initial_numeric_value(
     pruned_s = get_string_without_characters(s, [">", "<", "°"])
     lowercase_s = pruned_s.lower()
     split_string = lowercase_s.split()
-    print(f"split_string={split_string}")
     if split_string:
         try:
             return convert_string_to_float(s=split_string[0].strip(), warnings=warnings)
@@ -168,8 +131,6 @@ def get_unit_convertion_function(
 
     cleaned_string = stripped_string.lower().strip()
 
-    print(f"cleaned_string={cleaned_string}")
-
     # If no units given or "safe value", assume units correct
     if not cleaned_string or cleaned_string in safe_values:
         return lambda x: x
@@ -197,7 +158,6 @@ def convert_string_to_float(s: str, warnings: List[Dict[str, str]]) -> Optional[
             value = float(s.strip().replace(",", ""))
             message = f"Converted given value {s} to float value {value} using ',' thousands marker"
             warnings.append({"float_conversion_warning": message})
-            # TODO: Add warning logging
             return value
         except ValueError:
             pass

@@ -59,6 +59,5 @@ def get_density(raw_density: str, warnings: List) -> str:
             safe_values=[],
         ),
     )
-    print(f"material={material}")
 
     return material.format()
