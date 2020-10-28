@@ -15,7 +15,7 @@ TEMPERATURE_CONVERSION = {
 }
 
 
-#def get_temperature(s: str) -> Optional[float]:
+# def get_temperature(s: str) -> Optional[float]:
 #    potential_temp_values = [s.split("@"), s.split("for")]
 #
 #    for potential_temp_value in potential_temp_values:
@@ -125,6 +125,9 @@ def converts_to_float(anything: Any) -> bool:
 
 
 def clean_raw_string(raw_input: str) -> Tuple[bool, str]:
+    if raw_input == np.nan or raw_input == "nan":
+        return True, ""
+
     # Convert input to str
     s = str(raw_input).lower()
 

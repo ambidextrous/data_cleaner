@@ -1,7 +1,7 @@
-#from data_cleaner_app.normalization.common import get_temperature
+# from data_cleaner_app.normalization.common import get_temperature
 #
 #
-#class TestTemperature:
+# class TestTemperature:
 #    def test_get_temperature_celcius(self):
 #        # Arrange
 #        string_with_temp = "1.675 W/m-K @ 25°C"

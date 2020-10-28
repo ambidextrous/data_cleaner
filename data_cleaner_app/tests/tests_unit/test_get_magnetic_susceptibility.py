@@ -10,7 +10,7 @@ def test_normalize_magnetic_susceptibility():
 
     # Act
     returned_magnetic_susceptibility = get_magnetic_susceptibility(
-        given_magnetic_susceptibility
+        given_magnetic_susceptibility, []
     )
 
     # Assert

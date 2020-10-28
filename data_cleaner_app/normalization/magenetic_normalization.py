@@ -1,6 +1,6 @@
 import re
 import string
-from typing import Callable
+from typing import Callable, List, Dict
 
 from data_cleaner_app.normalization.common import (
     get_value_range,
@@ -16,7 +16,7 @@ from data_cleaner_app.data_classes import NumericMaterial
 MAGNETIC_CONVERSION = {}
 
 
-def get_magnetic_susceptibility(raw_magnetic: str) -> str:
+def get_magnetic_susceptibility(raw_magnetic: str, warning: List[Dict[str,str]]) -> str:
 
     is_common_case, magnetic = clean_raw_string(raw_magnetic)
     if is_common_case:
@@ -26,8 +26,8 @@ def get_magnetic_susceptibility(raw_magnetic: str) -> str:
     temperature_substring = get_string_post_substrings(magnetic, ["for", "@"])
 
     material = NumericMaterial(
-        single_value=get_initial_numeric_value(potential_numeric_section),
-        value_range=get_value_range(potential_numeric_section),
+        single_value=get_initial_numeric_value(potential_numeric_section,warnings),
+        value_range=get_value_range(potential_numeric_section,warnings),
         temperature=get_initial_numeric_value(temperature_substring),
         temperature_conversion=get_unit_convertion_function(
             s=temperature_substring,
