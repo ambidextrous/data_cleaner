@@ -60,3 +60,15 @@ could be individually adjusted without causeing conflicts within a complex
 inheritance hierarchy.
 * I also decided to cut down on code repetition by pooling the normalization functions'
 common elements in a file of common functions.
+* I decided to use the `pandas` library for `csv`/`json`/`xlsx` processing, as it provides
+a concise interface for doing so.
+* I decided to use the `click` library for building the command line interface tool for
+the same reason.
+* I decided to write the unit tests using the `Arrange`, `Act`, `Assert` idiom because
+I think it provides a readable, standardized format for testing.
+* I decided to include all of the parameters for adjusting the normalization for each
+field in the associated normalization function for that field so as to ensure that 
+all of the elements of normalization configuration could be adjusted in a single place,
+using a single idiom. The normalization procedure for each field is similar, but slightly 
+different, so the programme benefits from the possibility for it to be adjusted in this
+way.
