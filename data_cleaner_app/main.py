@@ -27,18 +27,6 @@ from data_cleaner_app.normalization.toughness_normalization import (
 logging.basicConfig(filename=LOGGING_FILE, level=logging.DEBUG)
 
 
-def main():
-    cwd = os.getcwd()
-    path_to_input = os.path.join(
-        cwd, "data_cleaner_app", "matmatch_data", "Ceramic_Raw_Data.csv"
-    )
-    df = pandas.read_csv(path_to_input)
-    normalized_df = normalize_dataframe(df)
-    output_dataframe(normalized_df, "test_output.csv")
-    output_dataframe(normalized_df, "test_output.xlsx")
-    output_dataframe(normalized_df, "test_output.json")
-
-
 def clean_data(input_filename: str, output_filename: str):
     cwd = os.getcwd()
     path_to_input = os.path.join(cwd, input_filename)
@@ -48,6 +36,9 @@ def clean_data(input_filename: str, output_filename: str):
 
 
 def output_dataframe(df: DataFrame, output_file_name: str) -> None:
+    """
+    Output dataframe as .json, .csv or .xlsx file based on supplied ending of output file name
+    """
     try:
         format = output_file_name.split(".")[1]
     except IndexError:
@@ -68,6 +59,11 @@ def output_dataframe(df: DataFrame, output_file_name: str) -> None:
 
 
 def normalize_dataframe(df: DataFrame) -> DataFrame:
+    """
+    Normalize an input dataframe to ensure all fields correctly named and numerical 
+    fields formatted according to the required <single_val/value_range>;<temperature> format,
+    E.g. 2.3;20 or 2.2,2.3;20
+    """
     normalized_rows = []
     df = df.fillna("")
 
@@ -162,7 +158,11 @@ def normalize_dataframe(df: DataFrame) -> DataFrame:
 @click.argument("output_filename")
 def clean(input_filename: str, output_filename: str):
     """
-    Insert product table entries
+    Command Line Interface tool to insert product table entries
+
+    Example usage:
+
+    python data_cleaner_app/main.py data_cleaner_app/matmatch_data/Ceramic_Raw_Data.csv my_test_output.csv
     """
     clean_data(input_filename, output_filename)
 

@@ -1,28 +1,62 @@
-Overview:
-You’ll find below is a small and simple assignment to help us understand how you work.
-There are two core parts: completing the programming task and then presenting / reviewing
-your approach.
-The Programming Task:
-Please implement a simple software that transitions the "unclean" data sample to a "clean"
-format. Project Requirements:
-● Use of python
-● Give the possibility to choose from multiple clean output formats: csv, json, xlsx
-● Unit tests
-Data Sample:
-Provided in the link are the following sets of data
-(https://docs.google.com/spreadsheets/d/18zvhJFtWxIKuX15-Hbq24yP9k1UeYPKL7h6YV1hn5
-ak/edit?usp=sharing):
-● Sheet “Ceramic_Raw_Data”: contains some “unclean” data.
-● Sheet “material_property_map”: some information that should be mapped to the clean
-data.
-● Sheet “material_data_result”: Some ideal end result.
-Data cleaning:
-● Strip the values of any additional characters. Multiple values / ranged values should be
-joined with a comma (“,”) separator. Temperature association with values should be
-joined with semicolon (“;”).
-○ 2.5 to 3 W/mK - > 2.5,3
-○ >6.04@20C -> 6.04;23
-● Map material property names.
-● Unit conversion where needed.
-Submission:
-Feel free to send a link to a github repository or email the python files you put together.
+# Data Cleaner App Programming Task
+A simple command line application that transforms "unclean" sample data into a "clean"
+format. 
+
+## Project Requirements
+* Use of python
+  * Done
+* Give the possibility to choose from multiple clean output formats: `csv`, `json`, `xlsx`
+  * Done
+* Unit tests
+  * Done
+
+## Testing
+
+To run unit tests, set up a Python 3.8 virtual env and install dependencies
+```bash
+pip install requirments.txt
+```
+The run tests with:
+```bash
+pytest data_cleaner_app
+```
+
+## Running
+To generate CSV file from dirty data sample, run:
+```bash
+python data_cleaner_app/main.py data_cleaner_app/matmatch_data/Ceramic_Raw_Data.csv my_test_output.csv
+```
+
+To generate JSON file from dirty data sample, run:
+```bash
+python data_cleaner_app/main.py data_cleaner_app/matmatch_data/Ceramic_Raw_Data.csv my_test_output.json
+```
+
+To generate XLSX file from dirty data sample, run:
+```bash
+python data_cleaner_app/main.py data_cleaner_app/matmatch_data/Ceramic_Raw_Data.csv my_test_output.xlsx
+```
+
+## Description
+
+### Approach taken
+* A simple Command Line Interface is used to operate the tool.
+* Unit testing focuses on ensuring that the correct outputs are produced for given inputs, including all sample data, plus a few additions
+* Each input field is processed via a configurable normalization function which attempts to extract the following attributes from the field:
+  * A single numeric value, e.g. `2.1`
+  * A range of numeric values, e.g. `2.0-2.2`
+  * A value conversion function, e.g. `lambda x: 2 * x`
+  * A temperature value, e.g. `20.4`
+  * A temperature conversion function, e.g. `lambda x: x - 273.15`
+
+Any of the values that can be extracted from the field data are then stored in a NumericalMaterial object.
+* The NumericalMaterial object uses a `.format` method to ensure that outputs are correctly formatted to the `<single_value/lower_bound,upper_bound(OPTIONAL;temperature>)` format. E.g. `2;20` or `3.0-3.3;0` or `18.2`.
+* The file extension of the provided output file name is then used to decide whether to output the normalized data as a `.cvs`, `.json` or `.xlsx` file.
+
+### Design decision
+* I decided to follow the principle of composition over inheritence when designing 
+the normalization process, to ensure that the normalization process for each field 
+could be individually adjusted without causeing conflicts within a complex 
+inheritance hierarchy.
+* I also decided to cut down on code repetition by pooling the normalization functions'
+common elements in a file of common functions.

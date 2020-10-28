@@ -16,6 +16,10 @@ TEMPERATURE_CONVERSION = {
 
 
 def get_value_range(s: str, warnings) -> Tuple[float, float]:
+    """
+    Extracts a range of numeric values from the beginning of a string, if divided by "to" or "-"
+    E.g. "1.2 to 3.4" or "1.2-3.4" -> (1.2,3.4)
+    """
     range_dividers = ["-", "to"]
     lowercase_s = s.lower()
     for divider in range_dividers:
@@ -37,6 +41,10 @@ def get_value_range(s: str, warnings) -> Tuple[float, float]:
 def get_initial_numeric_value(
     s: str, warnings: List[Dict[str, str]]
 ) -> Optional[float]:
+    """
+    Extracts the initial numberic value from a string
+    E.g. ">6.3" or "<6.3" or "6.3°" or "6.3" -> 6.3
+    """
     pruned_s = get_string_without_characters(s, [">", "<", "°"])
     lowercase_s = pruned_s.lower()
     split_string = lowercase_s.split()
@@ -49,6 +57,11 @@ def get_initial_numeric_value(
 
 
 def get_string_prior_to_substrings(s: str, substrings: List[str]) -> str:
+    """
+    Extracts a substring prior to a list dividers:
+    E.g.
+    get_string_prior_to_substrings("abc@defg#hi",["@","#"]) -> "abc"
+    """
     return_string = s.lower()
     for substring in substrings:
         try:
@@ -61,6 +74,11 @@ def get_string_prior_to_substrings(s: str, substrings: List[str]) -> str:
 
 
 def get_string_post_substrings(s: str, substrings: List[str]) -> str:
+    """
+    Extracts a substring post a list dividers:
+    E.g.
+    get_string_post_substrings("abc@defg#hi", ["@","#"]) -> "hi"
+    """
     return_string = s
     for substring in substrings:
         if substring in s:
@@ -72,6 +90,10 @@ def get_string_post_substrings(s: str, substrings: List[str]) -> str:
 
 
 def get_string_without_characters(s: str, characters: Iterable[str]) -> str:
+    """
+    Gets a string minus given chacters
+    E.g. get_string_without_character("abcde",["c","d"]) -> "abe"
+    """
     return_string = ""
     for char in s:
         if char not in characters:
@@ -88,6 +110,11 @@ def converts_to_float(anything: Any) -> bool:
 
 
 def clean_raw_string(raw_input: str) -> Tuple[bool, str]:
+    """
+    Carries out common checks on simple or falsy numeric values:
+    - Returns (True, correct_output) if match found
+    - Returns (False, raw_input) otherwise
+    """
     if raw_input == np.nan or raw_input == "nan":
         return True, ""
 
@@ -122,6 +149,9 @@ def get_unit_convertion_function(
     conversion_dict: Dict[str, str],
     safe_values: Iterable[str],
 ) -> Callable[[float], float]:
+    """
+    
+    """
 
     # Strip substrings to be removed from s
     stripped_string = ""
