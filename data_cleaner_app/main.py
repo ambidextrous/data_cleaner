@@ -3,6 +3,7 @@ from pandas import DataFrame
 import os
 import numpy as np
 from typing import Any
+import json
 
 from config import LOGGING_FILE
 from data_cleaner_app.normalization.base_material_normalization import (
@@ -33,6 +34,8 @@ def main():
     df = pandas.read_csv(path_to_input)
     normalized_df = normalize_dataframe(df)
     output_dataframe(normalized_df,"test_output.csv")
+    output_dataframe(normalized_df,"test_output.xlsx")
+    output_dataframe(normalized_df,"test_output.json")
 
 
 def output_dataframe(df: DataFrame, output_file_name: str) -> None:
@@ -41,11 +44,14 @@ def output_dataframe(df: DataFrame, output_file_name: str) -> None:
     except IndexError:
         format = None
     if format == "csv":
-        DataFrame.to_csv(df,output_file_name,sep='\t')
+        DataFrame.to_csv(df,output_file_name,index=False)
     elif format == "xlsx":
-        DataFrame.to_csv(df,output_file_name)
+        DataFrame.to_excel(df,output_file_name,index=False)
     elif format == "json":
-        DataFrame.to_csv(df,output_file_name)
+        result = df.to_json(orient="records")
+        parsed = json.loads(result)
+        with open(output_file_name, "w") as outfile:
+            outfile.write(json.dumps(parsed, indent=4))
     else:
         raise ValueError(f"Unable to output to file format {format}, expected one of csv, xlsx or json")
 
@@ -90,8 +96,10 @@ def normalize_dataframe(df: DataFrame) -> DataFrame:
         normalized_row_data["warnings"] = str(warnings) if warnings else ""
 
         normalized_rows.append(normalized_row_data)
+        print(normalized_row_data)
 
-    normalized_df = DataFrame(normalized_rows)
+    normalized_df = DataFrame(normalized_rows,dtype=str)
+    print(normalized_df)
 
     columnTitles = ['source','name','internalId','baseMaterial','linearCoefficientOfThermalExpansion','thermalConductivity','fractureToughness','density','specificVolumetricSusceptibility','meltingPoint','warnings']
     normalized_df = normalized_df.reindex(columns=columnTitles)
@@ -101,6 +109,8 @@ def normalize_dataframe(df: DataFrame) -> DataFrame:
         normalized_df[column_name] = normalized_df[column_name].astype(str)
 
     normalized_df = normalized_df.fillna('')
+
+    normalized_df.reset_index(drop=True, inplace=True)
 
     return normalized_df
         
