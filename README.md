@@ -82,7 +82,7 @@ Any of the values that can be extracted from the field data are then stored in a
 * The NumericalMaterial object uses a `.format()` method to ensure that outputs are correctly formatted to the `<single_value/lower_bound,upper_bound(OPTIONAL;temperature>)` format. E.g. `2;20` or `3.0,3.3;0` or `18.2`.
 * The file extension of the provided output file name is then used to decide whether to output the normalized data as a `.cvs`, `.json` or `.xlsx` file.
 
-### Design decisiony
+### Design decisions
 * The noramlization system is designed to minimize code repetition (by storing common 
 functionality in the `common` directory) while also minimizing coupling (by following
 the principle of "composition over inheritance"). The goal of the system design is to
