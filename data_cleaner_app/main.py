@@ -153,9 +153,7 @@ def normalize_dataframe(df: DataFrame) -> DataFrame:
     column_names = normalized_df.head()
     for column_name in column_names:
         normalized_df[column_name] = normalized_df[column_name].astype(str)
-
     normalized_df = normalized_df.fillna("")
-
     normalized_df.reset_index(drop=True, inplace=True)
 
     return normalized_df
