@@ -18,6 +18,15 @@ TOUGHNESS_CONVERSION = {"mpam": lambda x: x}
 
 
 def get_fracture_toughness(raw_toughness: str, warnings: List[Dict[str, str]]) -> str:
+    """
+    Converts a raw input string into a correctly formatted output string.
+    First parses data from input by passing transformed versions of the
+    raw input to the constructor of a NumericalMaterial object, then calls
+    the .format() method of that object to correctly format output.
+
+    Adjustments to field normalization should be made by altering the parameters 
+    passed to the NumericalMaterial constructor here.
+    """
 
     is_common_case, toughness = clean_raw_string(raw_toughness)
     if is_common_case:

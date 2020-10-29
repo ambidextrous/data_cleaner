@@ -66,6 +66,7 @@ def normalize_dataframe(df: DataFrame) -> DataFrame:
     """
     normalized_rows = []
     df = df.fillna("")
+    error_indexes = []
 
     for index, row in df.iterrows():
 
@@ -121,9 +122,16 @@ def normalize_dataframe(df: DataFrame) -> DataFrame:
             normalized_rows.append(normalized_row_data)
 
         except Exception as ex:
-            message = f"Problem cleaning row number {index} {row} of data: {ex}"
+            # Log error in row and print to stdout, then continue with other rows
+            message = f"Problem cleaning row number {index} {row} of data:\n {ex}"
             logging.error(message)
+            error_indexes.append(index)
             print(message)
+
+    if error_indexes:
+        errors_warning = f"ERROR: {len(error_indexes)} error(s) while processing row(s): {error_indexes}"
+        logging.error(errors_warning)
+        print(errors_warning)
 
     normalized_df = DataFrame(normalized_rows, dtype=str)
 

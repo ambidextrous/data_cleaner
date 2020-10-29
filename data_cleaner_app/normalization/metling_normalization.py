@@ -14,6 +14,15 @@ from data_cleaner_app.data_classes import NumericMaterial
 
 
 def get_metling_point(raw_melting_point: str, warnings: List[Dict[str, str]]) -> str:
+    """
+    Converts a raw input string into a correctly formatted output string.
+    First parses data from input by passing transformed versions of the
+    raw input to the constructor of a NumericalMaterial object, then calls
+    the .format() method of that object to correctly format output.
+
+    Adjustments to field normalization should be made by altering the parameters 
+    passed to the NumericalMaterial constructor here.
+    """
 
     is_common_case, melting_point = clean_raw_string(raw_melting_point)
     if is_common_case:

@@ -12,11 +12,16 @@ format.
 
 ## Testing
 
-To run unit tests, set up a Python 3.8 virtual env and install dependencies
+To run unit tests, set up a Python 3.8.5 virtual environment. Add the project folder
+to your Python path:
+```bash
+export PYTHONPATH="${PYTHONPATH}:path/to/data_cleaner_app"
+```
+and install dependencies
 ```bash
 pip install requirments.txt
 ```
-The run tests with:
+Run tests with:
 ```bash
 pytest data_cleaner_app
 ```
@@ -27,9 +32,33 @@ To generate CSV file from dirty data sample, run:
 python data_cleaner_app/main.py data_cleaner_app/matmatch_data/Ceramic_Raw_Data.csv my_test_output.csv
 ```
 
+Sample output:
+```csv
+source,name,internalId,baseMaterial,linearCoefficientOfThermalExpansion,thermalConductivity,fractureToughness,density,specificVolumetricSusceptibility,meltingPoint,warnings
+https://www.ceramtec.com/ceramic-materials/zirconium-oxide/,Zirconium Oxide,MAMAC001,Zirconium Oxide,0.000011,"2.5,3","6.5,8",,,,
+```
 To generate JSON file from dirty data sample, run:
 ```bash
 python data_cleaner_app/main.py data_cleaner_app/matmatch_data/Ceramic_Raw_Data.csv my_test_output.json
+```
+
+Sample output:
+```json
+[
+    {
+        "source": "https://www.americanelements.com/zirconium-oxide-1314-23-4",
+        "name": "Zirconium Oxide",
+        "internalId": "MAMAC005",
+        "baseMaterial": "Zirconium Oxide",
+        "linearCoefficientOfThermalExpansion": "0.0000105",
+        "thermalConductivity": "",
+        "fractureToughness": "",
+        "density": "",
+        "specificVolumetricSusceptibility": "",
+        "meltingPoint": "2715",
+        "warnings": "[{'float_conversion_warning': \"Converted given value 4,919 to float value 4919.0 using ',' thousands marker\"}]"
+    }
+]
 ```
 
 To generate XLSX file from dirty data sample, run:
@@ -50,25 +79,52 @@ python data_cleaner_app/main.py data_cleaner_app/matmatch_data/Ceramic_Raw_Data.
   * A temperature conversion function, e.g. `lambda x: x - 273.15`
 
 Any of the values that can be extracted from the field data are then stored in a NumericalMaterial object.
-* The NumericalMaterial object uses a `.format` method to ensure that outputs are correctly formatted to the `<single_value/lower_bound,upper_bound(OPTIONAL;temperature>)` format. E.g. `2;20` or `3.0-3.3;0` or `18.2`.
+* The NumericalMaterial object uses a `.format()` method to ensure that outputs are correctly formatted to the `<single_value/lower_bound,upper_bound(OPTIONAL;temperature>)` format. E.g. `2;20` or `3.0,3.3;0` or `18.2`.
 * The file extension of the provided output file name is then used to decide whether to output the normalized data as a `.cvs`, `.json` or `.xlsx` file.
 
-### Design decision
-* I decided to follow the principle of composition over inheritence when designing 
-the normalization process, to ensure that the normalization process for each field 
-could be individually adjusted without causeing conflicts within a complex 
-inheritance hierarchy.
-* I also decided to cut down on code repetition by pooling the normalization functions'
-common elements in a file of common functions.
+### Design decisiony
+* The noramlization system is designed to minimize code repetition (by storing common 
+functionality in the `common` directory) while also minimizing coupling (by following
+the principle of "composition over inheritance"). The goal of the system design is to
+maximize maintainability by designing each normalization function to deal with all given 
+test cases, while also ensuring that the function can be easily adapted to futher data 
+(including special cases) if and when more test data is made available.
+* I decided to include all of the parameters for adjusting the normalization for each
+field in the associated normalization function for that field so as to ensure that 
+all of the elements of normalization configuration could be adjusted in a single place. 
+The normalization procedure for each field is similar, but slightly different, so the 
+programme benefits from the possibility for it to be adjusted in this way.
+* I added a `warnings` field to the output to inform users when potentially 
+problematic normalization decisions have been made:
+
+```json
+"warnings": "[{'float_conversion_warning': \"Converted given value 4,919 to float value 4919.0 using ',' thousands marker\"}]
+```
+* I added error logging and printing of errors to `stdout` in the case of an error (most
+likely a value error) being produced while processing any one line of the input CSV:
+```
+Problem cleaning row number 0 
+source                     https://www.ceramtec.com/ceramic-materials/zir...
+name                                                  Zirconium Oxide (ZrO2)
+internalId                                                          MAMAC001
+baseMaterial                                                 Zirconium Oxide
+thermal expansion                                      NOT_A_NUMERICAL_VALUE
+thermal conductivity                                           2.5 to 3 W/mK
+fracture toughness                                          6.5 to 8 MPam1/2
+Density                                                                     
+Magnetic Susceptibility                                                     
+Melting Point                                                               
+Name: 0, dtype: object of data: Unable to find unit conversion function for string not_a_numerical_value (cleaned to not_a_numerical_value) in conversion dict {'µmm': <function <lambda> at 0x7fec85fa7700>, 'µm/m': <function <lambda> at 0x7fec85fa7790>, '10-6': <function <lambda> at 0x7fec85fa7820>, '10-6°c': <function <lambda> at 0x7fec85fa7940>} (safe_values=[])
+
+```
+In the case of such a failure in the normalization of a single row other rows will not be
+affected. To test this functionality, run:
+```bash
+python data_cleaner_app/main.py data_cleaner_app/matmatch_data/corrupted.csv my_corrupted_output.json
+```
 * I decided to use the `pandas` library for `csv`/`json`/`xlsx` processing, as it provides
 a concise interface for doing so.
 * I decided to use the `click` library for building the command line interface tool for
 the same reason.
 * I decided to write the unit tests using the `Arrange`, `Act`, `Assert` idiom because
 I think it provides a readable, standardized format for testing.
-* I decided to include all of the parameters for adjusting the normalization for each
-field in the associated normalization function for that field so as to ensure that 
-all of the elements of normalization configuration could be adjusted in a single place,
-using a single idiom. The normalization procedure for each field is similar, but slightly 
-different, so the programme benefits from the possibility for it to be adjusted in this
-way.

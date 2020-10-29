@@ -150,7 +150,10 @@ def get_unit_convertion_function(
     safe_values: Iterable[str],
 ) -> Callable[[float], float]:
     """
-    
+    Removes characters from a string and checks whether the result matches
+    a conversion_dict key (and then returns the associated lambda function)
+    or a "safe_value" (and then returns an identity transformation lambda function
+    <labmda x: x>). Otherwise, raises ValueError
     """
 
     # Strip substrings to be removed from s
@@ -178,6 +181,11 @@ def get_unit_convertion_function(
 
 
 def convert_string_to_float(s: str, warnings: List[Dict[str, str]]) -> Optional[float]:
+    """
+    Converts a string to a float. If ValueError, attempts to do so by removing commas
+    from the input string (and adds a warning to the warnings list). If unable to convert,
+    raises a ValueError
+    """
     # Attempt to convert to float
     try:
         value = float(s.strip())
